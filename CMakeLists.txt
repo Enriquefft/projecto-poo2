@@ -20,7 +20,7 @@ if(NOT raylib_cpp_FOUND)
     fetchcontent_declare(
         raylib_cpp
         GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
-        GIT_TAG v4.2.6
+        GIT_TAG v4.2.7
     )
     fetchcontent_makeavailable(raylib_cpp)
 endif()
