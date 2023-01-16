@@ -7,7 +7,7 @@
  *other examples... To compile it for PLATFORM_WEB just uncomment #define
  *PLATFORM_WEB at beginning
  *
- *   This example has been created using raylib-cpp (www.raylib.com)
+ *   This  has been created using raylib-cpp (www.raylib.com)
  *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h
  *for details)
  *
@@ -16,10 +16,6 @@
  ********************************************************************************************/
 
 #include "raylib-cpp.hpp"
-
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
 
 //----------------------------------------------------------------------------------
 // Global Variables Definition
@@ -41,9 +37,6 @@ int main() {
   raylib::Window window(screenWidth, screenHeight,
                         "raylib-cpp [core] example - basic window");
 
-#if defined(PLATFORM_WEB)
-  emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
-#else
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
 
@@ -52,7 +45,6 @@ int main() {
   {
     UpdateDrawFrame();
   }
-#endif
 
   return 0;
 }
