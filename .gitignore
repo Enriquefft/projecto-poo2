@@ -1,3 +1,12 @@
+# Editors
+.vscode
+
+
+/build
+
+# raylib
+#/raylib_include
+
 # Prerequisites
 *.d
 
