@@ -1,4 +1,8 @@
+#pragma GCC diagnostic ignored "-Weverything"
+#pragma clang diagnostic ignored "-Wpadded"
 #include "raylib-cpp.hpp"
+#pragma GCC diagnostic on
+#pragma clang diagnostic on
 #include <iostream>
 
 int main() {
