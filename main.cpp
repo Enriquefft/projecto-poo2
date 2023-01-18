@@ -1,17 +1,5 @@
 #include "raylib-cpp.hpp"
-
-// clang-format off
-template <typename T>
-auto get(const T& tar) {
-    return tar;
-}
-// clang-format on
-
-class Foo {
-  int x;
-  char b;
-  int z;
-};
+#include <iostream>
 
 int main() {
   int screenWidth = 800;
