@@ -26,6 +26,7 @@ if(NOT raylib_FOUND)
     fetchcontent_makeavailable(raylib)
 endif()
 
+# raylib-cpp is not installed as cmake package with aur
 if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
     find_package(raylib_cpp QUIET)
     if(NOT raylib_cpp_FOUND)
