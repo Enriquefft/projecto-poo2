@@ -44,14 +44,17 @@ endif()
 set(SOURCES main.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-set_target_properties(
+target_compile_options(
     ${PROJECT_NAME}
-    PROPERTIES
-        COMPILE_OPTIONS -Weverything
-        -Wno-string-compare -Wnoc++98-compat
-        -Wno-undefined-func-template -fsanitize=address
-        -fsanitize=undefined -fno-sanitize-recover=all
+    PRIVATE
+        -Weverything
+        -Wno-string-compare
+        -Wno-c++98-compat
+        -Wno-undefined-func-template
 )
+# -fsanitize=address
+# -fsanitize=undefined
+# -fno-sanitize-recover=all
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 if(LSB_RELEASE_ID_SHORT STREQUAL "Arch")
