@@ -1,15 +1,4 @@
-#pragma GCC diagnostic push
-#pragma clang diagnostic push
-#pragma clang attribute push(__attribute__((no_sanitize("undefined"))),        \
-                             apply_to = function)
-
-#pragma GCC diagnostic ignored "-Weverything"
-#pragma clang diagnostic ignored "-Weverything"
-
 #include "raylib-cpp.hpp"
-#pragma GCC diagnostic pop
-#pragma clang diagnostic pop
-#pragma clang attribute pop
 
 #include <iostream>
 
