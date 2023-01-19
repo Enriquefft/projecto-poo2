@@ -5,6 +5,8 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 ) # Get linux distro
 
+message(STATUS "Current distro: ${LSB_RELEASE_ID_SHORT}")
+
 cmake_minimum_required(VERSION 3.22)
 project(raylib_cpp_example VERSION 0.1)
 
@@ -69,23 +71,31 @@ include_directories(${INCLUDE_DIRS})
 ####################################
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(WARNINGS "-Weverything")
+    set(WARNINGS
+        -Weverything
+        -Wno-string-compare
+        -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic
+    )
 else()
-    set(WARNINGS "-Wall -Wextra -Wshadow -pedantic")
+    set(WARNINGS -Wall -Wextra -Wshadow -pedantic)
 endif()
 
 target_compile_options(
     ${PROJECT_NAME}
     PRIVATE
         ${WARNINGS}
-        -Wno-string-compare
-        -Wno-c++98-compat
-        -Wno-c++98-compat-pedantic
         -fsanitize=address
         -fsanitize=undefined
         -fno-sanitize-recover=all
 )
-target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
+
+target_link_options(
+    ${PROJECT_NAME}
+    PRIVATE -fsanitize=address -fsanitize=undefined
+)
+#         ${WARNINGS}
+#         -fno-sanitize-recover=all)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 if(LSB_RELEASE_ID_SHORT STREQUAL "Arch")
