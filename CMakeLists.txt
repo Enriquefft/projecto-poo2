@@ -7,7 +7,7 @@ execute_process(
 
 message(STATUS "Current distro: ${LSB_RELEASE_ID_SHORT}")
 
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25.2)
 project(raylib_cpp_example VERSION 0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -22,6 +22,7 @@ if(NOT raylib_FOUND)
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
         GIT_TAG 4.2.0
+        SYSTEM
     )
     fetchcontent_makeavailable(raylib)
 endif()
@@ -38,6 +39,7 @@ if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
             raylib_cpp
             GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
             GIT_TAG v4.2.7
+            SYSTEM
         )
         fetchcontent_makeavailable(raylib_cpp)
     endif()
@@ -94,12 +96,10 @@ target_link_options(
     ${PROJECT_NAME}
     PRIVATE -fsanitize=address -fsanitize=undefined
 )
-#         ${WARNINGS}
-#         -fno-sanitize-recover=all)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 if(LSB_RELEASE_ID_SHORT STREQUAL "Arch")
-    target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
+    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE raylib raylib_cpp)
 endif()
