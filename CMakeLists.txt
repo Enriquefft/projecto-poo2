@@ -15,7 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
-        "CMake version is less than 3.25.2, upgrade to silence unnecesary warnings"
+        "CMake version is less than 3.25.2,
+                    upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -72,7 +73,7 @@ endif()
 
 # This is the main part:
 
-#set(MODULES "module1" "module2")
+# set(MODULES "module1" "module2")
 set(MODULES "All")
 
 set(INCLUDE_DIRS "")

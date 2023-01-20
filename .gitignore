@@ -1,12 +1,9 @@
 # Editors
 .vscode
 
-
+# Building
 /build
 /.cache
-
-# raylib
-#/raylib_include
 
 # Prerequisites
 *.d
