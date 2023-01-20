@@ -55,13 +55,13 @@ if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
                 raylib_cpp
                 GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
                 GIT_TAG v4.2.7
-                SYSTEM
             )
         else()
             fetchcontent_declare(
                 raylib_cpp
                 GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
                 GIT_TAG v4.2.7
+                SYSTEM
             )
         endif()
         fetchcontent_makeavailable(raylib_cpp)
