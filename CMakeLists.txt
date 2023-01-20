@@ -7,10 +7,17 @@ execute_process(
 
 message(STATUS "Current distro: ${LSB_RELEASE_ID_SHORT}")
 
-cmake_minimum_required(VERSION 3.25.2)
+cmake_minimum_required(VERSION 3.22)
 project(raylib_cpp_example VERSION 0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
+    message(
+        STATUS
+        "CMake version is less than 3.25.2, upgrade to silence unnecesary warnings"
+    )
+endif()
 
 # raylib
 message(STATUS "Searching for raylib")
@@ -18,12 +25,20 @@ find_package(raylib)
 if(NOT raylib_FOUND)
     message(STATUS "raylib not found, downloading...")
     include(FetchContent)
-    fetchcontent_declare(
-        raylib
-        GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG 4.2.0
-        SYSTEM
-    )
+    if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
+        fetchcontent_declare(
+            raylib
+            GIT_REPOSITORY https://github.com/raysan5/raylib.git
+            GIT_TAG 4.2.0
+        )
+    else()
+        fetchcontent_declare(
+            raylib
+            GIT_REPOSITORY https://github.com/raysan5/raylib.git
+            GIT_TAG 4.2.0
+            SYSTEM
+        )
+    endif()
     fetchcontent_makeavailable(raylib)
 endif()
 
@@ -35,12 +50,20 @@ if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
     if(NOT raylib_cpp_FOUND)
         message(STATUS "raylib_cpp not found, downloading...")
         include(FetchContent)
-        fetchcontent_declare(
-            raylib_cpp
-            GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
-            GIT_TAG v4.2.7
-            SYSTEM
-        )
+        if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
+            fetchcontent_declare(
+                raylib_cpp
+                GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
+                GIT_TAG v4.2.7
+                SYSTEM
+            )
+        else()
+            fetchcontent_declare(
+                raylib_cpp
+                GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
+                GIT_TAG v4.2.7
+            )
+        endif()
         fetchcontent_makeavailable(raylib_cpp)
     endif()
 endif()
