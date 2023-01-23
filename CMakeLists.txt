@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                    upgrade to silence unnecesary warnings"
+                                        upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -74,17 +74,20 @@ endif()
 # This is the main part:
 
 # set(MODULES "module1" "module2")
-set(MODULES "All")
+# set(MODULES "All")
 
 set(INCLUDE_DIRS "")
-set(SOURCES "")
+set(SOURCES src/main.cpp src/View/View.cpp)
 
 # Recursive source and include
+# Only if Sources is empty
 if(MODULES STREQUAL "All")
+    message(STATUS "Recursively searching for all source files")
     file(GLOB_RECURSE INCLUDE_DIRS "src/*.h")
     # Test pending
     file(GLOB_RECURSE SOURCES "src/*.cpp")
-else()
+elseif(SOURCES STREQUAL "")
+    message(STATUS "Recursively searching for modules: ${MODULES}")
     foreach(MODULE ${MODULES})
         file(GLOB_RECURSE INCLUDE_DIRS "${INCLUDE_DIRS}" "src/${MODULE}/*.h")
         file(GLOB_RECURSE SOURCES "${SOURCES}" "src/${MODULE}/*.cpp")
