@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                        upgrade to silence unnecesary warnings"
+                                                upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -73,11 +73,11 @@ endif()
 
 # This is the main part:
 
-# set(MODULES "module1" "module2")
+set(MODULES "View" "System")
 # set(MODULES "All")
 
 set(INCLUDE_DIRS "")
-set(SOURCES src/main.cpp src/View/View.cpp)
+set(SOURCES "")
 
 # Recursive source and include
 # Only if Sources is empty
@@ -93,6 +93,9 @@ elseif(SOURCES STREQUAL "")
         file(GLOB_RECURSE SOURCES "${SOURCES}" "src/${MODULE}/*.cpp")
     endforeach()
 endif()
+
+# append src/main to SOURCES
+list(APPEND SOURCES src/main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 include_directories(${INCLUDE_DIRS})
