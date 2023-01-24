@@ -38,7 +38,6 @@ template <std::floating_point T> T RandomNum(const T &min, const T &max) {
 
 // explicit instantiation
 
-// clang-format off
-template uint8_t     RandomNum<uint8_t>   (const uint8_t    &min, const uint8_t    &max);
+template uint8_t RandomNum<uint8_t>(const uint8_t &min, const uint8_t &max);
 
 } // namespace Utils

@@ -1,3 +1,7 @@
 #include "System.hpp"
+#include "../Board/Board.h"
 
-template <> void System<true>::run() {}
+void System::run() {
+  Board tab;
+  tab.printBoard();
+}

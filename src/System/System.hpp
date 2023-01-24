@@ -5,26 +5,16 @@
 #include <tuple>
 #include <vector>
 
-#include "../View/View.hpp"
+// #include "../View/View.hpp"
 
-template <bool singleView = true> class System {
+class System {
 
 public:
   System() = default;
   void run();
 
 private:
-  View m_vista;
-};
-
-// class specialization
-template <> class System<false> {
-public:
-  System() = delete;
-  void run();
-
-private:
-  std::vector<View> m_vista;
+  // View m_vista;
 };
 
 #endif // !SYSTEM_HPP

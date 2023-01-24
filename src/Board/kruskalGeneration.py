@@ -1,5 +1,11 @@
 from numpy.random import shuffle
-import numpy as np
+
+
+def printMaze(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            print(matrix[i][j], end=" ")
+        print()
 
 
 class Kruskal:
@@ -14,22 +20,21 @@ class Kruskal:
         Returns:
             np.array: returned matrix
         """
-        # create empty grid
-        # grid = np.empty((self.H, self.W), dtype=np.int8)
-        # grid.fill(1)
 
-        grid = [[" " for _ in range(self.W)] for _ in range(self.H)]
+        grid = [["X" for _ in range(self.W)] for _ in range(self.H)]
 
         forest = []
         for row in range(1, self.H - 1, 2):
             for col in range(1, self.W - 1, 2):
                 forest.append([(row, col)])
-                grid[row][col] = "X"
+                grid[row][col] = " "
 
         edges = []
+
         for row in range(2, self.H - 1, 2):
             for col in range(1, self.W - 1, 2):
                 edges.append((row, col))
+
         for row in range(1, self.H - 1, 2):
             for col in range(2, self.W - 1, 2):
                 edges.append((row, col))
@@ -71,6 +76,8 @@ class Kruskal:
                 )
 
             if tree1 != tree2:
+                print("old:")
+                print(forest)
                 new_tree = forest[tree1] + forest[tree2]
                 temp1 = list(forest[tree1])
                 temp2 = list(forest[tree2])
@@ -79,12 +86,17 @@ class Kruskal:
                 ]  # faster than forest.remove(temp1)
                 forest = [x for x in forest if x != temp2]
                 forest.append(new_tree)
-                grid[ce_row][ce_col] = "X"
+                grid[ce_row][ce_col] = " "
+                print("new:")
+                print(forest)
+                print()
+                print()
 
         return grid
 
 
 maze = Kruskal(5, 5).generate()
+print("\nFinished Maze:")
 for row in maze:
     for elem in row:
         print(elem, end=" ")

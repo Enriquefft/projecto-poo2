@@ -1,15 +1,21 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <cstdint>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace Utils {
 
-class Space {
+struct Space {
   // TEMPORARY DEFINITION
   // Remove and make its own module
   // TODO(enrique):
+public:
+  explicit Space(uint8_t value) : value(value) {}
+  uint8_t value;
+  void operator=(uint8_t value) { this->value = value; }
 };
 
 // USING ALIASES
@@ -37,6 +43,8 @@ inline constexpr auto SignedToUnsigned(const T &value) {
 
 extern template uint8_t RandomNum<uint8_t>(const uint8_t &min,
                                            const uint8_t &max);
+extern template unsigned char
+RandomNum<unsigned char>(const unsigned char &min, const unsigned char &max);
 
 } // namespace Utils
 

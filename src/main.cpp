@@ -1,6 +1,6 @@
 #include "System/System.hpp"
 
 int main() {
-  System<> sistema;
+  System sistema;
   sistema.run();
 }
