@@ -37,6 +37,7 @@ public:
   uint8_t base_width;
 
   void generateBoard(uint8_t height, uint8_t width);
+  void notNaziGenerate();
 
   template <HUNT_METHOD = DEFAULT_HUNT_METHOD>
   std::optional<square> hunt(const uint8_t &count);

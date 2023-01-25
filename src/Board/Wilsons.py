@@ -188,15 +188,14 @@ class Wilsons:
         visits = 0
         current = start
 
+        print(grid[current])
+
         while grid[current[0]][current[1]] != 0:
             grid[current] = 0
             next1 = self._move(current, walk[current])
 
             new_x = (next1[0] + current[0]) // 2
             new_y = (next1[1] + current[1]) // 2
-
-            print(f"current: {current}, next: {next1}, new: {new_x, new_y}")
-            print()
 
             grid[(next1[0] + current[0]) // 2, (next1[1] + current[1]) // 2] = 0
             visits += 1
