@@ -6,11 +6,19 @@
 #include <unordered_map>
 
 enum class HUNT_METHOD { RANDOM, SERPENTINE };
+
 constexpr HUNT_METHOD DEFAULT_HUNT_METHOD = HUNT_METHOD::RANDOM;
 
-enum class DIRECTION { NORTH, EAST, SOUTH, WEST };
-
 using square = std::pair<uint8_t, uint8_t>;
+
+namespace DIRECTION {
+
+constexpr square NORTH = {-2, 0};
+constexpr square SOUTH = {2, 0};
+constexpr square EAST = {0, -2};
+constexpr square WEST = {0, 2};
+} // namespace DIRECTION
+using direction_t = square;
 
 class Board {
 public:
@@ -28,11 +36,11 @@ private:
   template <HUNT_METHOD = DEFAULT_HUNT_METHOD>
   square hunt(const uint8_t &count) = delete;
 
-  std::unordered_map<square, DIRECTION> randomWalk(const square &start);
-  DIRECTION randomDirection(const square &current);
-  DIRECTION move(const square &current, const DIRECTION &direction);
+  std::unordered_map<square, direction_t> randomWalk(const square &start);
+  direction_t randomDirection(const square &current);
+  direction_t move(const square &current, const direction_t &direction);
 
-  uint8_t solveRandomWalk(const std::unordered_map<square, DIRECTION> &walk,
+  uint8_t solveRandomWalk(const std::unordered_map<square, direction_t> &walk,
                           const square &start);
 };
 

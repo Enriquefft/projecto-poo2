@@ -81,16 +81,16 @@ Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count) {
   throw std::runtime_error("Not implemented");
 }
 
-std::unordered_map<square, DIRECTION> Board::randomWalk(const square &start) {
+std::unordered_map<square, direction_t> Board::randomWalk(const square &start) {
   // TODO(enrique): Implement random walk
   throw std::runtime_error("Not implemented");
 }
-DIRECTION Board::randomDirection(const square &current) {
+direction_t Board::randomDirection(const square &current) {
 
   auto row = current.first;
   auto col = current.first;
 
-  std::vector<DIRECTION> directions;
+  std::vector<direction_t> directions;
 
   if (row > 1) {
     directions.emplace_back(DIRECTION::NORTH);
@@ -108,13 +108,13 @@ DIRECTION Board::randomDirection(const square &current) {
   return directions[Utils::RandomNum<size_t>(0, directions.size() - 1)];
 }
 
-DIRECTION Board::move(const square &current, const DIRECTION &direction) {
-  // TODO(enrique): Implement move
-  throw std::runtime_error("Not implemented");
+direction_t Board::move(const square &current, const direction_t &direction) {
+
+  return {current.first + direction.first, current.second + direction.second};
 }
 
 uint8_t
-Board::solveRandomWalk(const std::unordered_map<square, DIRECTION> &walk,
+Board::solveRandomWalk(const std::unordered_map<square, direction_t> &walk,
                        const square &start) {
   // TODO(enrique): Implement solve random walk
   throw std::runtime_error("Not implemented");
