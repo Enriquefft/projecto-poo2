@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                                                                                      upgrade to silence unnecesary warnings"
+                                                                                                                      upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -108,20 +108,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         -Wno-string-compare
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
+        -fsanitize=address
+        -fsanitize=undefined
+        -fno-sanitize-recover=all
+    )
+    target_link_options(
+        ${PROJECT_NAME}
+        PRIVATE -fsanitize=address -fsanitize=undefined
     )
 else()
     set(WARNINGS -Wall -Wextra -Wshadow -pedantic)
 endif()
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${WARNINGS} -g)
-# -fsanitize=address
-# -fsanitize=undefined
-# -fno-sanitize-recover=all)
-
-# target_link_options(
-#     ${PROJECT_NAME}
-#     PRIVATE -fsanitize=address -fsanitize=undefined
-# )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 if(LSB_RELEASE_ID_SHORT STREQUAL "Arch")
