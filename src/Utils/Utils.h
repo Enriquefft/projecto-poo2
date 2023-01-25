@@ -8,15 +8,7 @@
 
 namespace Utils {
 
-struct Space {
-  // TEMPORARY DEFINITION
-  // Remove and make its own module
-  // TODO(enrique):
-public:
-  explicit Space(uint8_t value) : value(value) {}
-  uint8_t value;
-  void operator=(uint8_t value) { this->value = value; }
-};
+using Space = int;
 
 // USING ALIASES
 using board_t = std::vector<std::vector<Space>>;

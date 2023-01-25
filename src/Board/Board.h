@@ -3,6 +3,7 @@
 
 #include "../Utils/Utils.h"
 #include <cstdint>
+#include <optional>
 #include <unordered_map>
 
 enum class HUNT_METHOD { RANDOM, SERPENTINE };
@@ -13,10 +14,10 @@ using square = std::pair<uint8_t, uint8_t>;
 
 namespace DIRECTION {
 
-constexpr square NORTH = {-2, 0};
-constexpr square SOUTH = {2, 0};
-constexpr square EAST = {0, -2};
-constexpr square WEST = {0, 2};
+constexpr std::pair<int8_t, int8_t> NORTH = {-2, 0};
+constexpr std::pair<int8_t, int8_t> SOUTH = {2, 0};
+constexpr std::pair<int8_t, int8_t> EAST = {0, -2};
+constexpr std::pair<int8_t, int8_t> WEST = {0, 2};
 } // namespace DIRECTION
 using direction_t = square;
 
@@ -34,14 +35,20 @@ private:
   void generateBoard(uint8_t height, uint8_t width);
 
   template <HUNT_METHOD = DEFAULT_HUNT_METHOD>
-  square hunt(const uint8_t &count) = delete;
+  std::optional<square> hunt(const uint8_t &count);
 
-  std::unordered_map<square, direction_t> randomWalk(const square &start);
+  struct HashPair {
+    template <class T1, class T2>
+    size_t operator()(const std::pair<T1, T2> &pair) const;
+  };
+  std::unordered_map<square, direction_t, HashPair>
+  randomWalk(const square &start);
   direction_t randomDirection(const square &current);
-  direction_t move(const square &current, const direction_t &direction);
+  static direction_t move(const square &current, const direction_t &direction);
 
-  uint8_t solveRandomWalk(const std::unordered_map<square, direction_t> &walk,
-                          const square &start);
+  uint8_t
+  solveRandomWalk(const std::unordered_map<square, direction_t, HashPair> &walk,
+                  const square &start);
 };
 
 #endif // !BOARD_H
