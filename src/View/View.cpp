@@ -1,18 +1,24 @@
 #include "View.hpp"
-#include <iostream>
+#include "Button/Button.hpp"
 
 View::View(const std::string &title, const int &width, const int &height)
     : window(width, height, title) {}
 
 void View::startScreen() {
 
+  Button button1("Button1");
+
   while (!window.ShouldClose()) {
     BeginDrawing();
 
     window.ClearBackground(RAYWHITE);
 
+    const char *dir = GetApplicationDirectory();
     DrawText("Congrats! You created your first window!", 190, 200, 20,
              LIGHTGRAY);
+    DrawText(dir, 40, 40, 20, LIGHTGRAY);
+
+    button1.Draw(100, 100);
 
     // Object methods.
     // logo.Draw(screenWidth / 2 - logo.GetWidth() / 2,

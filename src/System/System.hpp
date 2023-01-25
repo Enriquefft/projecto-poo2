@@ -5,7 +5,7 @@
 #include <tuple>
 #include <vector>
 
-// #include "../View/View.hpp"
+#include "../View/View.hpp"
 
 class System {
 
@@ -14,7 +14,7 @@ public:
   void run();
 
 private:
-  // View m_vista;
+  View m_vista;
 };
 
 #endif // !SYSTEM_HPP

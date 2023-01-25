@@ -2,6 +2,7 @@
 #include "../Board/Board.h"
 
 void System::run() {
-  Board tab;
-  tab.printBoard();
+  m_vista.startScreen();
+  // Board tab;
+  // tab.printBoard();
 }
