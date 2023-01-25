@@ -1,7 +1,8 @@
 #include "Board.h"
-#include "../Utils/Utils.h"
 #include <algorithm>
 #include <random>
+
+#include "../Utils/Utils.h"
 
 // Testing
 #include <cstdint>
@@ -13,7 +14,6 @@ constexpr uint8_t MIN_WIDTH = 10;
 constexpr uint8_t MAX_HEIGHT = 15;
 constexpr uint8_t MIN_HEIGHT = 7;
 
-// First ineficient implementation
 Board::Board(uint8_t customHeight, uint8_t customWidth)
     : base_height(customHeight), base_width(customWidth) {
   uint8_t height = base_height * 2 + 1;
@@ -51,11 +51,11 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
   uint8_t start_y = 0;
 
   do {
-    start_x = Utils::RandomNum<uint8_t>(0, height);
-  } while (start_x % 2 == 1);
+    start_x = Utils::RandomNum<uint8_t>(0, height - 1);
+  } while (start_x % 2 != 1);
   do {
-    start_y = Utils::RandomNum<uint8_t>(0, width);
-  } while (start_y % 2 == 1);
+    start_y = Utils::RandomNum<uint8_t>(0, width - 1);
+  } while (start_y % 2 != 1);
 
   m_maze[start_x][start_y] = 0;
 
@@ -66,8 +66,11 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
   while (first_hunt_opt.has_value()) {
     auto [row, col] = first_hunt_opt.value();
     auto walk = randomWalk({row, col});
+
     visit_count = solveRandomWalk(walk, {row, col});
+    std::cout << static_cast<int>(visit_count) << std::endl;
     first_hunt_opt = hunt(visit_count);
+    // printBoard();
   }
 }
 
@@ -88,28 +91,31 @@ void Board::printBoard() {
 
 template <>
 std::optional<square> Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
+  // CHECKED
 
   if (count >= base_height * base_width) {
-    return std::make_pair(-1, -1);
+    std::cout << "All squares visited" << std::endl;
+    return std::nullopt;
   }
 
   uint8_t row = 0;
   uint8_t col = 0;
 
   do {
-    row = Utils::RandomNum<uint8_t>(0, static_cast<uint8_t>(m_maze.size()));
-  } while (row % 2 == 1);
+    row = Utils::RandomNum<uint8_t>(1, static_cast<uint8_t>(m_maze.size() - 1));
+  } while (row % 2 != 1);
 
   do {
-    col = Utils::RandomNum<uint8_t>(0, static_cast<uint8_t>(m_maze[0].size()));
-  } while (col % 2 == 1);
+    col = Utils::RandomNum<uint8_t>(1,
+                                    static_cast<uint8_t>(m_maze[0].size() - 1));
+  } while (col % 2 != 1);
 
   return std::make_pair(row, col);
 }
 
 template <>
 std::optional<square>
-Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count) {
+Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t & /*count*/) {
   // TODO(enrique): Implement serpentine
   throw std::runtime_error("Not implemented");
 }
@@ -130,6 +136,7 @@ size_t Board::HashPair::operator()(const std::pair<T1, T2> &pair) const {
 
 std::unordered_map<square, direction_t, Board::HashPair>
 Board::randomWalk(const square &start) {
+  // ERROR HERE??
 
   direction_t direction = randomDirection(start);
   std::unordered_map<square, direction_t, Board::HashPair> walk;
@@ -144,7 +151,9 @@ Board::randomWalk(const square &start) {
   }
   return walk;
 }
+
 direction_t Board::randomDirection(const square &current) {
+  // CHECKED
 
   auto [row, col] = current;
 
@@ -166,7 +175,7 @@ direction_t Board::randomDirection(const square &current) {
   return directions[Utils::RandomNum<size_t>(0, directions.size() - 1)];
 }
 
-direction_t Board::move(const square &current, const direction_t &direction) {
+square Board::move(const square &current, const direction_t &direction) {
   return {current.first + direction.first, current.second + direction.second};
 }
 
@@ -180,10 +189,10 @@ uint8_t Board::solveRandomWalk(
 
   while (m_maze[current.first][current.second] != 0) {
     m_maze[current.first][current.second] = 0;
-    direction_t next = move(current, walk.at(current));
+    square next = move(current, walk.at(current));
     uint8_t new_x = (next.first + current.first) / 2;
     uint8_t new_y = (next.second + current.second) / 2;
-    m_maze[new_x][new_y] = 0;
+    m_maze[new_x][new_y] = 0; // Seg fault
     count++;
     current = next;
   }
