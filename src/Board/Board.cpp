@@ -86,9 +86,28 @@ std::unordered_map<square, DIRECTION> Board::randomWalk(const square &start) {
   throw std::runtime_error("Not implemented");
 }
 DIRECTION Board::randomDirection(const square &current) {
-  // TODO(enrique): Implement random direction
-  throw std::runtime_error("Not implemented");
+
+  auto row = current.first;
+  auto col = current.first;
+
+  std::vector<DIRECTION> directions;
+
+  if (row > 1) {
+    directions.emplace_back(DIRECTION::NORTH);
+  }
+  if (row < m_maze.size() - 2) {
+    directions.emplace_back(DIRECTION::SOUTH);
+  }
+  if (col > 1) {
+    directions.emplace_back(DIRECTION::EAST);
+  }
+  if (col < m_maze[0].size() - 2) {
+    directions.emplace_back(DIRECTION::WEST);
+  }
+
+  return directions[Utils::RandomNum<size_t>(0, directions.size() - 1)];
 }
+
 DIRECTION Board::move(const square &current, const DIRECTION &direction) {
   // TODO(enrique): Implement move
   throw std::runtime_error("Not implemented");

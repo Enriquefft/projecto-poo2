@@ -39,5 +39,6 @@ template <std::floating_point T> T RandomNum(const T &min, const T &max) {
 // explicit instantiation
 
 template uint8_t RandomNum<uint8_t>(const uint8_t &min, const uint8_t &max);
+template size_t RandomNum<size_t>(const size_t &min, const size_t &max);
 
 } // namespace Utils
