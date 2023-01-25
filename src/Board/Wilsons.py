@@ -198,7 +198,7 @@ class Wilsons:
         return visits
 
 
-x = Wilsons(3, 3, hunt_order="random").generate()
+x = Wilsons(15, 15, hunt_order="random").generate()
 
 for row in x:
     for elem in row:

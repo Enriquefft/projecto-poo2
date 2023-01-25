@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                                                            upgrade to silence unnecesary warnings"
+                                                                                        upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -73,7 +73,7 @@ endif()
 
 # This is the main part:
 
-set(MODULES "System" "Board" "Utils")
+# set(MODULES "System" "Board" "Utils")
 set(MODULES "All")
 
 set(INCLUDE_DIRS "")
