@@ -65,18 +65,25 @@ void Board::printBoard() {
   }
 }
 
-template <>
-std::pair<uint8_t, uint8_t>
-Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
+template <> square Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
   if (count >= base_height * base_width) {
-    return std::make_pair(0, 0);
+    return std::make_pair(-1, -1);
   }
-  // TODO(enrique): Implement randrange
-  throw std::runtime_error("Not implemented");
+  uint8_t row = 0;
+  uint8_t col = 0;
+
+  do {
+    row = Utils::RandomNum<uint8_t>(0, static_cast<uint8_t>(m_maze.size()));
+  } while (row % 2 == 1);
+
+  do {
+    col = Utils::RandomNum<uint8_t>(0, static_cast<uint8_t>(m_maze[0].size()));
+  } while (col % 2 == 1);
+
+  return std::make_pair(row, col);
 }
-template <>
-std::pair<uint8_t, uint8_t>
-Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count) {
+
+template <> square Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count) {
   // TODO(enrique): Implement serpentine
   throw std::runtime_error("Not implemented");
 }
@@ -116,6 +123,19 @@ direction_t Board::move(const square &current, const direction_t &direction) {
 uint8_t
 Board::solveRandomWalk(const std::unordered_map<square, direction_t> &walk,
                        const square &start) {
-  // TODO(enrique): Implement solve random walk
-  throw std::runtime_error("Not implemented");
+
+  uint8_t count = 0;
+
+  square current = start;
+
+  while (m_maze[current.first][current.second].value != 0) {
+    m_maze[current.first][current.second].value = 0;
+    direction_t next = move(current, walk.at(current));
+    uint8_t new_x = (next.first + current.first) / 2;
+    uint8_t new_y = (next.second + current.second) / 2;
+    m_maze[new_x][new_y].value = 0;
+    count++;
+    current = next;
+  }
+  return count;
 }
