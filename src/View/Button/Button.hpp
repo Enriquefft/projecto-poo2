@@ -27,10 +27,12 @@ public:
   // defaultFont());
   inline void Draw(int posX = 0, int posY = 0) const {
     m_texture.Draw(posX, posY);
-    Vector2 text_pos = {static_cast<float>(posX + m_texture.GetWidth() / 2 -
-                                           m_text.GetFontSize() / 2),
-                        static_cast<float>(posY + m_texture.GetHeight() / 2 -
-                                           m_text.GetFontSize() / 2)};
+
+    rl::Vector2 text_pos = {static_cast<float>(posX + m_texture.GetWidth() / 2 -
+                                               m_text.GetFontSize() / 2),
+                            static_cast<float>(posY +
+                                               m_texture.GetHeight() / 2 -
+                                               m_text.GetFontSize() / 2)};
     m_text.Draw(text_pos);
   }
 

@@ -188,8 +188,6 @@ class Wilsons:
         visits = 0
         current = start
 
-        print(grid[current])
-
         while grid[current[0]][current[1]] != 0:
             grid[current] = 0
             next1 = self._move(current, walk[current])
@@ -204,7 +202,7 @@ class Wilsons:
         return visits
 
 
-x = Wilsons(3, 3, hunt_order="random").generate()
+x = Wilsons(10, 10, hunt_order="random").generate()
 
 for row in x:
     for elem in row:
