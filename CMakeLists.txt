@@ -16,13 +16,16 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                                                                                                      upgrade to silence unnecesary warnings"
+                                                                                                                              upgrade to silence unnecesary warnings"
     )
 endif()
 
 # raylib
 message(STATUS "Searching for raylib")
-find_package(raylib)
+if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Ubuntu")
+    # Kevin fix
+    find_package(raylib QUIET)
+endif()
 if(NOT raylib_FOUND)
     message(STATUS "raylib not found, downloading...")
     include(FetchContent)
@@ -47,7 +50,7 @@ endif()
 if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
     message(STATUS "Searching for raylib_cpp")
     # raylib_cpp
-    find_package(raylib_cpp)
+    find_package(raylib_cpp QUIET)
     if(NOT raylib_cpp_FOUND)
         message(STATUS "raylib_cpp not found, downloading...")
         include(FetchContent)
