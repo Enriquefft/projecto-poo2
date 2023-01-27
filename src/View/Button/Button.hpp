@@ -27,22 +27,16 @@ public:
                   const rl::Color &color = WHITE);
   // explicit Button(std::string_view text, rl::Font &customFont =
   // defaultFont());
-  inline void draw(int posX = 0, int posY = 0) const {
 
-    auto text_size = m_text.MeasureEx();
-    auto button_size = m_texture.GetSize();
+  [[nodiscard]] bool isClicked(const int &posX, const int &posY) const;
 
-    auto [text_x, text_y] = std::pair{posX + (static_cast<int>(button_size.x) -
-                                              static_cast<int>(text_size.x)) /
-                                                 2,
-                                      posY + (static_cast<int>(button_size.y) -
-                                              static_cast<int>(text_size.y)) /
-                                                 2};
+  void draw(const int &posX = 0, const int &posY = 0) const;
 
-    m_texture.Draw(posX, posY);
-    m_text.Draw(text_x, text_y);
+  [[nodiscard]] inline bool isClicked(const rl::Vector2 &pos) const {
+    return isClicked(static_cast<int>(pos.x), static_cast<int>(pos.y));
   }
-  inline void Draw(rl::Vector2 pos) const {
+
+  inline void Draw(const rl::Vector2 &pos) const {
     this->draw(static_cast<int>(pos.x), static_cast<int>(pos.y));
   }
 

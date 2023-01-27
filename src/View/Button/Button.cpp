@@ -1,6 +1,9 @@
 #include "Button.hpp"
 #include <Vector2.hpp>
 
+// Temporal
+#include <iostream>
+
 const float TEXT_BUTTON_RATIO = 0.8F;
 
 Button::Button(std::string_view text, rl::Texture &customTexture,
@@ -26,4 +29,43 @@ rl::Texture &Button::defaultTexture() {
   [[clang::always_destroy]] static rl::Texture default_texture(
       DEFAULT_TEXTURE_PATH.data());
   return default_texture;
+}
+
+void Button::draw(const int &posX, const int &posY) const {
+
+  auto text_size = m_text.MeasureEx();
+  auto button_size = m_texture.GetSize();
+
+  // clang-format off
+  auto [text_x, text_y] = std::pair{
+      posX +
+          (static_cast<int>(button_size.x) - static_cast<int>(text_size.x)) / 2,
+      posY +
+          (static_cast<int>(button_size.y) - static_cast<int>(text_size.y)) / 2};
+  // clang-format on
+
+  m_texture.Draw(posX, posY);
+  m_text.Draw(text_x, text_y);
+}
+
+bool Button::isClicked(const int &posX, const int &posY) const {
+
+  if (!rl::Mouse::IsButtonPressed(MouseButton::MOUSE_LEFT_BUTTON)) {
+    return false;
+  }
+
+  auto button_size = m_texture.GetSize();
+  auto click_pos = rl::Mouse::GetPosition();
+
+  std::cout << "Click pos: " << click_pos.x << ", " << click_pos.y << std::endl;
+
+  // complicated stuff to check if click_pos is inside texture draw position
+  // static_cast is used because rl::Vector2 is a float,
+  // might not be needed, but affects performance?
+  return static_cast<int>(click_pos.x) >= posX &&
+         static_cast<int>(click_pos.x) <=
+             posX + static_cast<int>(button_size.x) &&
+         static_cast<int>(click_pos.y) >= posY &&
+         static_cast<int>(click_pos.y) <=
+             posY + static_cast<int>(button_size.y);
 }

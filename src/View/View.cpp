@@ -1,6 +1,9 @@
 #include "View.hpp"
 #include "Button/Button.hpp"
 
+// Temporal
+#include <iostream>
+
 constexpr float TITLE_SIZE = 50;
 
 View::View(const std::string &title, const int &width, const int &height)
@@ -26,6 +29,11 @@ void View::startScreen() {
 
     BUTTON1.Draw(BUTTON_POS);
     TITLE.Draw(TITLE_POS);
+
+    if (BUTTON1.isClicked(BUTTON_POS)) {
+      std::cout << "Clicked" << std::endl;
+      break;
+    }
 
     EndDrawing();
   }
