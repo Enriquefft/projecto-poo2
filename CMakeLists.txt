@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                                                                                                              upgrade to silence unnecesary warnings"
+                                                                                                                                                  upgrade to silence unnecesary warnings"
     )
 endif()
 
@@ -57,14 +57,12 @@ if(NOT LSB_RELEASE_ID_SHORT STREQUAL "Arch")
         if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
             fetchcontent_declare(
                 raylib_cpp
-                GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
-                GIT_TAG v4.2.7
+                GIT_REPOSITORY https://github.com/Enriquefft/raylib-cpp.git
             )
         else()
             fetchcontent_declare(
                 raylib_cpp
-                GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
-                GIT_TAG v4.2.7
+                GIT_REPOSITORY https://github.com/Enriquefft/raylib-cpp.git
                 SYSTEM
             )
         endif()
