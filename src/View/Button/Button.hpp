@@ -42,9 +42,13 @@ public:
     m_texture.Draw(posX, posY);
     m_text.Draw(text_x, text_y);
   }
-  inline void Draw(rl::Vector2 pos) const { this->draw(pos.x, pos.y); }
+  inline void Draw(rl::Vector2 pos) const {
+    this->draw(static_cast<int>(pos.x), static_cast<int>(pos.y));
+  }
 
-  inline rl::Vector2 GetSize() const { return m_texture.GetSize(); }
+  [[nodiscard]] inline rl::Vector2 GetSize() const {
+    return m_texture.GetSize();
+  }
 
 private:
   rl::Text m_text;

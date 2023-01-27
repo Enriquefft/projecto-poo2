@@ -30,8 +30,7 @@ public:
   Board(uint8_t height, uint8_t width);
   void printBoard();
 
-  // private:
-
+private:
   board_t m_maze;
   uint8_t base_height;
   uint8_t base_width;
