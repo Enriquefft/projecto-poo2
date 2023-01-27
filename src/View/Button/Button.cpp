@@ -1,5 +1,4 @@
 #include "Button.hpp"
-#include <Vector2.hpp>
 
 // Temporal
 #include <iostream>

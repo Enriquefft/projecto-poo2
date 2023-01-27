@@ -1,11 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <Color.hpp>
-#include <Texture.hpp>
-#include <Vector2.hpp>
 #include <raylib-cpp.hpp>
-#include <raylib.h>
 #include <string_view>
 #include <vector>
 

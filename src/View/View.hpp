@@ -1,8 +1,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "Button/Button.hpp"
-#include <Texture.hpp>
 #include <initializer_list>
 #include <raylib-cpp.hpp>
 
