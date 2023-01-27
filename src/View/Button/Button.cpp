@@ -26,8 +26,11 @@ rl::Font &Button::defaultFont() {
   return default_font;
 }
 rl::Texture &Button::defaultTexture() {
-  [[clang::always_destroy]] static rl::Texture default_texture(
-      DEFAULT_TEXTURE_PATH.data());
+  // THIS MIGHT CAUSE A SIgSEV
+  // the static texture is destroyed on exit time (when the program ends)
+  // but, the window and graphics related stuff is destroyed earlier
+  // could the be what is causing the sigv?
+  static rl::Texture default_texture(DEFAULT_TEXTURE_PATH.data());
   return default_texture;
 }
 

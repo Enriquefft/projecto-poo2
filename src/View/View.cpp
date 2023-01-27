@@ -32,7 +32,8 @@ void View::startScreen() {
 
     if (BUTTON1.isClicked(BUTTON_POS)) {
       std::cout << "Clicked" << std::endl;
-      break;
+      EndDrawing();
+      window.Close();
     }
 
     EndDrawing();
