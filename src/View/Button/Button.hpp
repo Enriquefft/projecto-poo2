@@ -3,7 +3,9 @@
 
 #include <Color.hpp>
 #include <Texture.hpp>
+#include <Vector2.hpp>
 #include <raylib-cpp.hpp>
+#include <raylib.h>
 #include <string_view>
 #include <vector>
 
@@ -25,16 +27,24 @@ public:
                   const rl::Color &color = WHITE);
   // explicit Button(std::string_view text, rl::Font &customFont =
   // defaultFont());
-  inline void Draw(int posX = 0, int posY = 0) const {
-    m_texture.Draw(posX, posY);
+  inline void draw(int posX = 0, int posY = 0) const {
 
-    rl::Vector2 text_pos = {static_cast<float>(posX + m_texture.GetWidth() / 2 -
-                                               m_text.GetFontSize() / 2),
-                            static_cast<float>(posY +
-                                               m_texture.GetHeight() / 2 -
-                                               m_text.GetFontSize() / 2)};
-    m_text.Draw(text_pos);
+    auto text_size = m_text.MeasureEx();
+    auto button_size = m_texture.GetSize();
+
+    auto [text_x, text_y] = std::pair{posX + (static_cast<int>(button_size.x) -
+                                              static_cast<int>(text_size.x)) /
+                                                 2,
+                                      posY + (static_cast<int>(button_size.y) -
+                                              static_cast<int>(text_size.y)) /
+                                                 2};
+
+    m_texture.Draw(posX, posY);
+    m_text.Draw(text_x, text_y);
   }
+  inline void Draw(rl::Vector2 pos) const { this->draw(pos.x, pos.y); }
+
+  inline rl::Vector2 GetSize() const { return m_texture.GetSize(); }
 
 private:
   rl::Text m_text;
