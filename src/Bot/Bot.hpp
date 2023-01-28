@@ -14,12 +14,11 @@ class Bot {
 public:
   Bot() = default;
 
-  template <ALGORITHM alg = ALGORITHM::A_STAR>
-  void solve(const Board &board) = delete;
-
   template <ALGORITHM T>
-    requires IsDFSOrBFS<T>
-  void solve(const Board &board);
+    requires IsDFSOrBFS<T> bool
+  solve(const Board &board);
+
+  template <ALGORITHM alg> bool solve(const Board &board) = delete;
 
   [[nodiscard]] std::vector<square> getSolution() const;
   [[nodiscard]] std::vector<square> getSearchedPath() const;

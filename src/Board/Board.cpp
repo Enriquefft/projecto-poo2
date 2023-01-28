@@ -243,21 +243,29 @@ std::vector<square> Board::getNeighbors(const square &current) const {
 
   std::vector<square> neighbors;
 
-  if (row > 0 && m_maze[row - 1][col] == SQUARE_TYPE::EMPTY) {
+  if (row > 0 && m_maze[row - 1][col] != SQUARE_TYPE::WALL) {
     neighbors.emplace_back(row - 1, col);
   }
-  if (row < m_maze.size() - 1 && m_maze[row + 1][col] == SQUARE_TYPE::EMPTY) {
+  if (row < m_maze.size() - 1 && m_maze[row + 1][col] != SQUARE_TYPE::WALL) {
     neighbors.emplace_back(row + 1, col);
   }
-  if (col > 0 && m_maze[row][col - 1] == SQUARE_TYPE::EMPTY) {
+  if (col > 0 && m_maze[row][col - 1] != SQUARE_TYPE::WALL) {
     neighbors.emplace_back(row, col - 1);
   }
-  if (col < m_maze[0].size() - 1 &&
-      m_maze[row][col + 1] == SQUARE_TYPE::EMPTY) {
+  if (col < m_maze[0].size() - 1 && m_maze[row][col + 1] != SQUARE_TYPE::WALL) {
     neighbors.emplace_back(row, col + 1);
   }
 
   return neighbors;
+}
+
+void Board::paintPath(const std::vector<square> &path) {
+  for (const auto &square : path) {
+    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
+        m_maze[square.first][square.second] != SQUARE_TYPE::END) {
+      m_maze[square.first][square.second] = SQUARE_TYPE::PATH;
+    }
+  }
 }
 
 std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
@@ -273,6 +281,9 @@ std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
     break;
   case SQUARE_TYPE::END:
     ost << " ";
+    break;
+  case SQUARE_TYPE::PATH:
+    ost << " ";
     break;
   }
   return ost;

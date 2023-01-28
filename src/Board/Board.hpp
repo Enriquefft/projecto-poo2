@@ -12,7 +12,13 @@ enum class HUNT_METHOD { RANDOM, SERPENTINE };
 
 constexpr HUNT_METHOD DEFAULT_HUNT_METHOD = HUNT_METHOD::RANDOM;
 
-enum class SQUARE_TYPE : uint8_t { EMPTY = 0, WALL = 1, START = 2, END = 3 };
+enum class SQUARE_TYPE : uint8_t {
+  EMPTY = 0,
+  WALL = 1,
+  START = 2,
+  END = 3,
+  PATH = 4
+};
 std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type);
 
 using board_t = std::vector<std::vector<SQUARE_TYPE>>;
@@ -38,6 +44,8 @@ public:
   [[nodiscard]] square getEnd() const;
 
   [[nodiscard]] std::vector<square> getNeighbors(const square &current) const;
+
+  void paintPath(const std::vector<square> &path);
 
 private:
   board_t m_maze;
