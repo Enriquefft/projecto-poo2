@@ -28,4 +28,7 @@ private:
   std::vector<square> m_searchedPath;
 };
 
+// explicit instantiate solve
+extern template bool Bot::solve<ALGORITHM::DFS>(const Board &board);
+extern template bool Bot::solve<ALGORITHM::BFS>(const Board &board);
 #endif // !BOT_H

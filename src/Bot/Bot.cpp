@@ -79,10 +79,10 @@ Bot::solve(const Board &board) {
   return true;
 }
 
-template <> bool Bot::solve<ALGORITHM::GBGS>(const Board &board) {
+template <> bool Bot::solve<ALGORITHM::GBGS>(const Board & /*board*/) {
   return false;
 }
-template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board &board) {
+template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board & /*board*/) {
   return false;
 }
 
