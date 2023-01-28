@@ -10,21 +10,27 @@
 template <ALGORITHM T>
   requires IsDFSOrBFS<T> bool
 Bot::solve(const Board &board) {
+
+  struct Node {
+    square m_square;
+    square m_parent;
+  };
+
   m_solution.clear();
   m_searchedPath.clear();
+
   std::conditional_t<T == ALGORITHM::BFS, std::queue<square>,
                      std::stack<square>>
       frontier;
 
   square start = board.getStart();
 
-  std::vector<square> explored;
-  std::vector<square> parents;
+  std::vector<Node> parents;
+  parents.push_back({start, start});
 
   frontier.push(start);
 
-  explored.push_back(start);
-  parents.push_back(start);
+  m_searchedPath.push_back(start);
 
   bool found = false;
   while (!frontier.empty()) {
@@ -44,29 +50,31 @@ Bot::solve(const Board &board) {
       break;
     }
 
-    explored.push_back(current);
-
-    // std::cout << "Current: " << (int)current.first << "  "
-    //           << (int)current.second << std::endl;
     for (square neighbor : board.getNeighbors(current)) {
 
-      if (std::find(explored.begin(), explored.end(), neighbor) ==
-          explored.end()) {
-        // std::cout << "Neighbor: " << (int)neighbor.first << "  "
-        //           << (int)neighbor.second << std::endl;
+      if (std::find(m_searchedPath.begin(), m_searchedPath.end(), neighbor) ==
+          m_searchedPath.end()) {
         frontier.push(neighbor);
-        explored.push_back(neighbor);
-        parents.push_back(current);
         m_searchedPath.push_back(neighbor);
+        parents.push_back({neighbor, current});
       }
     }
   }
   if (!found) {
     std::cout << "No solution found" << std::endl;
     return false;
+    m_solution.clear();
   }
 
   square current = board.getEnd();
+  while (current != board.getStart()) {
+    m_solution.push_back(current);
+    auto itt =
+        std::find_if(parents.begin(), parents.end(), [&](const Node &node) {
+          return node.m_square == current;
+        });
+    current = itt->m_parent;
+  }
 
   return true;
 }

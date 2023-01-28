@@ -267,6 +267,22 @@ void Board::paintPath(const std::vector<square> &path) {
     }
   }
 }
+void Board::paintPath(const std::vector<square> &solution,
+                      const std::vector<square> &searchedPath) {
+  for (const auto &square : solution) {
+    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
+        m_maze[square.first][square.second] != SQUARE_TYPE::END) {
+      m_maze[square.first][square.second] = SQUARE_TYPE::PATH;
+    }
+  }
+  for (const auto &square : searchedPath) {
+    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
+        m_maze[square.first][square.second] != SQUARE_TYPE::END &&
+        m_maze[square.first][square.second] != SQUARE_TYPE::PATH) {
+      m_maze[square.first][square.second] = SQUARE_TYPE::SEARCHED;
+    }
+  }
+}
 
 std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
   switch (type) {
@@ -284,6 +300,9 @@ std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
     break;
   case SQUARE_TYPE::PATH:
     ost << " ";
+    break;
+  case SQUARE_TYPE::SEARCHED:
+    ost << " ";
     break;
   }
   return ost;
