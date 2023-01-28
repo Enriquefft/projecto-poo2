@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "Board.hpp"
 #include <algorithm>
 #include <random>
 
@@ -43,7 +43,7 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
   m_maze.resize(height);
   for (auto &row : m_maze) {
     for (auto i = 0; i < width; i++) {
-      row.emplace_back(1);
+      row.emplace_back(SQUARE_TYPE::WALL);
     }
   }
 
@@ -57,7 +57,7 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
     start_y = Utils::RandomNum<uint8_t>(1, width - 1);
   } while (start_y % 2 != 1);
 
-  m_maze[start_x][start_y] = 0;
+  m_maze[start_x][start_y] = SQUARE_TYPE::EMPTY;
 
   uint8_t visit_count = 1;
 
@@ -80,6 +80,23 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
     visit_count = solveRandomWalk(walk, {row, col});
     first_hunt_opt = hunt(visit_count);
   }
+
+  do {
+    start_x = Utils::RandomNum<uint8_t>(1, height - 1);
+    start_y = Utils::RandomNum<uint8_t>(1, width - 1);
+  } while (m_maze[start_x][start_y] != SQUARE_TYPE::EMPTY);
+  m_maze[start_x][start_y] = SQUARE_TYPE::START;
+  m_start = {start_x, start_y};
+
+  uint8_t end_x = 0;
+  uint8_t end_y = 0;
+  // END
+  do {
+    end_x = Utils::RandomNum<uint8_t>(1, height - 1);
+    end_y = Utils::RandomNum<uint8_t>(1, width - 1);
+  } while (m_maze[end_x][end_y] != SQUARE_TYPE::EMPTY);
+  m_maze[end_x][end_y] = SQUARE_TYPE::END;
+  m_goal = {end_x, end_y};
 }
 
 void Board::printBoard() {
@@ -87,11 +104,7 @@ void Board::printBoard() {
 
   for (auto &row : m_maze) {
     for (auto &elem : row) {
-      if (elem == 1) {
-        std::cout << "██";
-      } else {
-        std::cout << "  ";
-      }
+      std::cout << elem;
     }
     std::cout << std::endl;
   }
@@ -157,7 +170,7 @@ Board::randomWalk(const square &start) {
 
   auto current = move(start, direction);
 
-  while (m_maze[current.first][current.second] == 1) {
+  while (m_maze[current.first][current.second] == SQUARE_TYPE::WALL) {
     direction = randomDirection(current);
     walk[current] = direction;
     current = move(current, direction);
@@ -208,14 +221,59 @@ uint8_t Board::solveRandomWalk(
   // printBoard();
 
   // std::cout << m_maze[current.first][current.second];
-  while (m_maze[current.first][current.second] != 0) {
-    m_maze[current.first][current.second] = 0;
+  while (m_maze[current.first][current.second] != SQUARE_TYPE::EMPTY) {
+    m_maze[current.first][current.second] = SQUARE_TYPE::EMPTY;
     square next = move(current, walk.at(current));
     uint8_t new_x = (next.first + current.first) / 2;
     uint8_t new_y = (next.second + current.second) / 2;
-    m_maze[new_x][new_y] = 0;
+    m_maze[new_x][new_y] = SQUARE_TYPE::EMPTY;
     count++;
     current = next;
   }
   return count;
+}
+
+board_t Board::getBoard() const { return m_maze; }
+square Board::getStart() const { return m_start; }
+square Board::getEnd() const { return m_goal; }
+
+std::vector<square> Board::getNeighbors(const square &current) const {
+
+  auto [row, col] = current;
+
+  std::vector<square> neighbors;
+
+  if (row > 0 && m_maze[row - 1][col] == SQUARE_TYPE::EMPTY) {
+    neighbors.emplace_back(row - 1, col);
+  }
+  if (row < m_maze.size() - 1 && m_maze[row + 1][col] == SQUARE_TYPE::EMPTY) {
+    neighbors.emplace_back(row + 1, col);
+  }
+  if (col > 0 && m_maze[row][col - 1] == SQUARE_TYPE::EMPTY) {
+    neighbors.emplace_back(row, col - 1);
+  }
+  if (col < m_maze[0].size() - 1 &&
+      m_maze[row][col + 1] == SQUARE_TYPE::EMPTY) {
+    neighbors.emplace_back(row, col + 1);
+  }
+
+  return neighbors;
+}
+
+std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
+  switch (type) {
+  case SQUARE_TYPE::WALL:
+    ost << "██";
+    break;
+  case SQUARE_TYPE::EMPTY:
+    ost << "  ";
+    break;
+  case SQUARE_TYPE::START:
+    ost << "";
+    break;
+  case SQUARE_TYPE::END:
+    ost << " ";
+    break;
+  }
+  return ost;
 }
