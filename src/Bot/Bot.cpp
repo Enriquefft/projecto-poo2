@@ -79,14 +79,21 @@ Bot::solve(const Board &board) {
   return true;
 }
 
-template <> bool Bot::solve<ALGORITHM::GBGS>(const Board & /*board*/) {
-  std::cout << "GBGS" << std::endl;
+template <ALGORITHM T>
+  requires IsGBFSOrA_STAR<T> bool
+Bot::solve(const Board & /*board*/) {
+  std::cout << "GBGS or astar" << std::endl;
   return false;
 }
-template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board & /*board*/) {
-  std::cout << "A_STAR" << std::endl;
-  return false;
-}
+
+// template <> bool Bot::solve<ALGORITHM::GBGS>(const Board & /*board*/) {
+//   std::cout << "GBGS" << std::endl;
+//   return false;
+// }
+// template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board & /*board*/) {
+//   std::cout << "A_STAR" << std::endl;
+//   return false;
+// }
 
 std::vector<square> Bot::getSolution() const { return m_solution; }
 std::vector<square> Bot::getSearchedPath() const { return m_searchedPath; }
@@ -94,3 +101,5 @@ std::vector<square> Bot::getSearchedPath() const { return m_searchedPath; }
 // explicit instantiate solve
 template bool Bot::solve<ALGORITHM::DFS>(const Board &board);
 template bool Bot::solve<ALGORITHM::BFS>(const Board &board);
+template bool Bot::solve<ALGORITHM::GBGS>(const Board &board);
+template bool Bot::solve<ALGORITHM::A_STAR>(const Board &board);
