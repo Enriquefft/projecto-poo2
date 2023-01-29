@@ -80,9 +80,11 @@ Bot::solve(const Board &board) {
 }
 
 template <> bool Bot::solve<ALGORITHM::GBGS>(const Board & /*board*/) {
+  std::cout << "GBGS" << std::endl;
   return false;
 }
 template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board & /*board*/) {
+  std::cout << "A_STAR" << std::endl;
   return false;
 }
 

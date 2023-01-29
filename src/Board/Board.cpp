@@ -260,26 +260,26 @@ std::vector<square> Board::getNeighbors(const square &current) const {
 }
 
 void Board::paintPath(const std::vector<square> &path) {
-  for (const auto &square : path) {
-    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
-        m_maze[square.first][square.second] != SQUARE_TYPE::END) {
-      m_maze[square.first][square.second] = SQUARE_TYPE::PATH;
+  for (const auto &sqr : path) {
+    if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {
+      m_maze[sqr.first][sqr.second] = SQUARE_TYPE::PATH;
     }
   }
 }
 void Board::paintPath(const std::vector<square> &solution,
                       const std::vector<square> &searchedPath) {
-  for (const auto &square : solution) {
-    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
-        m_maze[square.first][square.second] != SQUARE_TYPE::END) {
-      m_maze[square.first][square.second] = SQUARE_TYPE::PATH;
+  for (const auto &sqr : solution) {
+    if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {
+      m_maze[sqr.first][sqr.second] = SQUARE_TYPE::PATH;
     }
   }
-  for (const auto &square : searchedPath) {
-    if (m_maze[square.first][square.second] != SQUARE_TYPE::START &&
-        m_maze[square.first][square.second] != SQUARE_TYPE::END &&
-        m_maze[square.first][square.second] != SQUARE_TYPE::PATH) {
-      m_maze[square.first][square.second] = SQUARE_TYPE::SEARCHED;
+  for (const auto &sqr : searchedPath) {
+    if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END &&
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::PATH) {
+      m_maze[sqr.first][sqr.second] = SQUARE_TYPE::SEARCHED;
     }
   }
 }
