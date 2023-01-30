@@ -123,8 +123,52 @@ std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
 template <>
 std::optional<square>
 Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t & /*count*/) {
-  // TODO(enrique): Implement serpentine
-  throw std::runtime_error("Not implemented");
+
+  /*
+             cell = (1, -1)
+        found = False
+
+        while not found:
+            cell = (cell[0], cell[1] + 2)
+            if cell[1] > (self.W - 2):
+                cell = (cell[0] + 2, 1)
+                if cell[0] > (self.H - 2):
+                    return (-1, -1)
+
+            if grid[cell[0]][cell[1]] != 0:
+                found = True
+
+        return cell
+
+    */
+
+  std::pair<int8_t, int8_t> cell = {1, -1};
+  bool found = false;
+
+  while (!found) {
+    cell.second += 2;
+    if (cell.second > static_cast<int8_t>(m_maze[0].size() - 2)) {
+      cell.first += 2;
+      cell.second = 1;
+      if (cell.first > static_cast<int8_t>(m_maze.size() - 2)) {
+        return std::nullopt;
+      }
+    }
+
+    if (m_maze[static_cast<uint8_t>(cell.first)]
+              [static_cast<uint8_t>(cell.second)] != SQUARE_TYPE::EMPTY) {
+      found = true;
+    }
+  }
+
+  // if is valid cell
+  if (cell.first >= 0 && cell.second >= 0 &&
+      cell.first < static_cast<int8_t>(m_maze.size()) &&
+      cell.second < static_cast<int8_t>(m_maze[0].size())) {
+    return std::make_pair(static_cast<uint8_t>(cell.first),
+                          static_cast<uint8_t>(cell.second));
+  }
+  throw std::runtime_error("Invalid cell");
 }
 
 template <class T1, class T2>

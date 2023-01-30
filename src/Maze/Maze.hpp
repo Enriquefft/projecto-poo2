@@ -10,7 +10,7 @@
 
 enum class HUNT_METHOD { RANDOM, SERPENTINE };
 
-constexpr HUNT_METHOD DEFAULT_HUNT_METHOD = HUNT_METHOD::RANDOM;
+constexpr HUNT_METHOD DEFAULT_HUNT_METHOD = HUNT_METHOD::SERPENTINE;
 
 enum class SQUARE_TYPE { EMPTY, WALL, START, END, PATH, SEARCHED };
 std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type);
