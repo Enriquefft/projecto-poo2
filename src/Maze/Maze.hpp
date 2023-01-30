@@ -29,8 +29,10 @@ constexpr direction_t WEST = {0, 2};
 
 class Maze {
 public:
-  Maze();
-  Maze(uint8_t height, uint8_t width);
+  explicit Maze(HUNT_METHOD huntMethod = DEFAULT_HUNT_METHOD);
+  Maze(uint8_t height, uint8_t width,
+       HUNT_METHOD huntMethod = DEFAULT_HUNT_METHOD);
+
   void printMaze();
   [[nodiscard]] maze_t getMaze() const;
 
@@ -51,18 +53,21 @@ private:
   square m_start;
   square m_goal;
 
-  void generateMaze(uint8_t height, uint8_t width);
+  void generateMaze(uint8_t height, uint8_t width, HUNT_METHOD huntMethod);
 
-  template <HUNT_METHOD = DEFAULT_HUNT_METHOD>
-  std::optional<square> hunt(const uint8_t &count);
+  template <HUNT_METHOD>
+  std::optional<square> hunt(const std::optional<uint8_t> &count);
 
   struct HashPair {
     template <class T1, class T2>
     size_t operator()(const std::pair<T1, T2> &pair) const;
   };
+
   std::unordered_map<square, direction_t, HashPair>
   randomWalk(const square &start);
+
   direction_t randomDirection(const square &current);
+
   static square move(const square &current, const direction_t &direction);
 
   uint8_t

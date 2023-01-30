@@ -14,30 +14,32 @@ constexpr uint8_t MIN_WIDTH = 10;
 constexpr uint8_t MAX_HEIGHT = 15;
 constexpr uint8_t MIN_HEIGHT = 7;
 
-Maze::Maze(uint8_t customHeight, uint8_t customWidth)
+Maze::Maze(uint8_t customHeight, uint8_t customWidth, HUNT_METHOD huntMethod)
     : base_height(customHeight), base_width(customWidth) {
   uint8_t height = base_height * 2 + 1;
   uint8_t width = base_width * 2 + 1;
 
-  generateMaze(height, width);
+  generateMaze(height, width, huntMethod);
 }
-Maze::Maze()
+Maze::Maze(HUNT_METHOD huntMethod)
     : base_height(Utils::RandomNum<uint8_t>(MIN_HEIGHT, MAX_HEIGHT)),
       base_width(Utils::RandomNum<uint8_t>(MIN_WIDTH, MAX_WIDTH)) {
 
   uint8_t height = base_height * 2 + 1;
   uint8_t width = base_width * 2 + 1;
 
-  generateMaze(height, width);
+  generateMaze(height, width, huntMethod);
 }
 
 // Methods to hunt next square
 template <>
-std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count);
+std::optional<square>
+Maze::hunt<HUNT_METHOD::RANDOM>(const std::optional<uint8_t> &count);
 template <>
-std::optional<square> Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count);
+std::optional<square>
+Maze::hunt<HUNT_METHOD::SERPENTINE>(const std::optional<uint8_t> &count);
 
-void Maze::generateMaze(uint8_t height, uint8_t width) {
+void Maze::generateMaze(uint8_t height, uint8_t width, HUNT_METHOD huntMethod) {
 
   // generate matrix of walls
   m_maze = std::vector<std::vector<SQUARE_TYPE>>(
@@ -57,17 +59,32 @@ void Maze::generateMaze(uint8_t height, uint8_t width) {
 
   uint8_t visit_count = 1;
 
-  auto first_hunt_opt = hunt(visit_count);
+  // constexpr HUNT_METHOD METHOD = HUNT_METHOD::RANDOM;
 
-  while (first_hunt_opt.has_value()) {
-    auto [row, col] = first_hunt_opt.value();
-    auto walk = randomWalk({row, col});
+  if (huntMethod == HUNT_METHOD::RANDOM) {
 
-    visit_count += solveRandomWalk(walk, {row, col});
-    first_hunt_opt = hunt(visit_count);
-    // printMaze();
+    std::optional<square> first_hunt_opt =
+        hunt<HUNT_METHOD::RANDOM>(visit_count);
+    while (first_hunt_opt.has_value()) {
+      auto [row, col] = first_hunt_opt.value();
+      auto walk = randomWalk({row, col});
+
+      visit_count += solveRandomWalk(walk, {row, col});
+      first_hunt_opt = hunt<HUNT_METHOD::RANDOM>(visit_count);
+    }
+
+  } else if (huntMethod == HUNT_METHOD::SERPENTINE) {
+
+    std::optional<square> first_hunt_opt =
+        hunt<HUNT_METHOD::SERPENTINE>(std::nullopt);
+    while (first_hunt_opt.has_value()) {
+      auto [row, col] = first_hunt_opt.value();
+      auto walk = randomWalk({row, col});
+
+      visit_count += solveRandomWalk(walk, {row, col});
+      first_hunt_opt = hunt<HUNT_METHOD::SERPENTINE>(std::nullopt);
+    }
   }
-
   do {
     start_x = Utils::RandomNum<uint8_t>(1, height - 1);
     start_y = Utils::RandomNum<uint8_t>(1, width - 1);
@@ -77,7 +94,7 @@ void Maze::generateMaze(uint8_t height, uint8_t width) {
 
   uint8_t end_x = 0;
   uint8_t end_y = 0;
-  // END
+
   do {
     end_x = Utils::RandomNum<uint8_t>(1, height - 1);
     end_y = Utils::RandomNum<uint8_t>(1, width - 1);
@@ -98,8 +115,12 @@ void Maze::printMaze() {
 }
 
 template <>
-std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
+std::optional<square>
+Maze::hunt<HUNT_METHOD::RANDOM>(const std::optional<uint8_t> &count) {
   // CHECKED
+  if (!count.has_value()) {
+    throw std::runtime_error("Count can't be empty with RANDOM hunt method");
+  }
 
   if (count >= base_height * base_width) {
     return std::nullopt;
@@ -122,25 +143,11 @@ std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
 
 template <>
 std::optional<square>
-Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t & /*count*/) {
+Maze::hunt<HUNT_METHOD::SERPENTINE>(const std::optional<uint8_t> &count) {
 
-  /*
-             cell = (1, -1)
-        found = False
-
-        while not found:
-            cell = (cell[0], cell[1] + 2)
-            if cell[1] > (self.W - 2):
-                cell = (cell[0] + 2, 1)
-                if cell[0] > (self.H - 2):
-                    return (-1, -1)
-
-            if grid[cell[0]][cell[1]] != 0:
-                found = True
-
-        return cell
-
-    */
+  if (count.has_value()) {
+    throw std::runtime_error("Count must be empty with SERPENTINE hunt method");
+  }
 
   std::pair<int8_t, int8_t> cell = {1, -1};
   bool found = false;
@@ -181,13 +188,11 @@ size_t Maze::HashPair::operator()(const std::pair<T1, T2> &pair) const {
     return hash1 ^ hash2;
   }
 
-  // If hash1 == hash2, their XOR is zero.
   return hash1;
 }
 
 std::unordered_map<square, direction_t, Maze::HashPair>
 Maze::randomWalk(const square &start) {
-  // ERROR HERE??
 
   direction_t direction = randomDirection(start);
   std::unordered_map<square, direction_t, Maze::HashPair> walk;
@@ -204,7 +209,6 @@ Maze::randomWalk(const square &start) {
 }
 
 direction_t Maze::randomDirection(const square &current) {
-  // CHECKED
 
   auto [row, col] = current;
 
