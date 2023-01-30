@@ -1,4 +1,4 @@
-#include "Board.hpp"
+#include "Maze.hpp"
 #include <algorithm>
 #include <random>
 
@@ -14,31 +14,30 @@ constexpr uint8_t MIN_WIDTH = 10;
 constexpr uint8_t MAX_HEIGHT = 15;
 constexpr uint8_t MIN_HEIGHT = 7;
 
-Board::Board(uint8_t customHeight, uint8_t customWidth)
+Maze::Maze(uint8_t customHeight, uint8_t customWidth)
     : base_height(customHeight), base_width(customWidth) {
   uint8_t height = base_height * 2 + 1;
   uint8_t width = base_width * 2 + 1;
 
-  generateBoard(height, width);
+  generateMaze(height, width);
 }
-Board::Board()
+Maze::Maze()
     : base_height(Utils::RandomNum<uint8_t>(MIN_HEIGHT, MAX_HEIGHT)),
       base_width(Utils::RandomNum<uint8_t>(MIN_WIDTH, MAX_WIDTH)) {
 
   uint8_t height = base_height * 2 + 1;
   uint8_t width = base_width * 2 + 1;
 
-  generateBoard(height, width);
+  generateMaze(height, width);
 }
 
 // Methods to hunt next square
 template <>
-std::optional<square> Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count);
+std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count);
 template <>
-std::optional<square>
-Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count);
+std::optional<square> Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count);
 
-void Board::generateBoard(uint8_t height, uint8_t width) {
+void Maze::generateMaze(uint8_t height, uint8_t width) {
   // Allocate memory for the board
   m_maze.resize(height);
   for (auto &row : m_maze) {
@@ -69,7 +68,7 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
 
   //   visit_count = solveRandomWalk(walk, {row, col});
   //   first_hunt_opt = hunt(visit_count);
-  //   // printBoard();
+  //   // printMaze();
   // }
 
   // Not a good solution but works ig
@@ -99,8 +98,8 @@ void Board::generateBoard(uint8_t height, uint8_t width) {
   m_goal = {end_x, end_y};
 }
 
-void Board::printBoard() {
-  std::cout << "Board:" << std::endl;
+void Maze::printMaze() {
+  std::cout << "Maze:" << std::endl;
 
   for (auto &row : m_maze) {
     for (auto &elem : row) {
@@ -111,7 +110,7 @@ void Board::printBoard() {
 }
 
 template <>
-std::optional<square> Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
+std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
   // CHECKED
 
   if (count >= base_height * base_width) {
@@ -134,20 +133,20 @@ std::optional<square> Board::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
   // std::cout << "Hunting at: " << static_cast<int>(row) << ", "
   //           << static_cast<int>(col) << std::endl;
 
-  // printBoard();
+  // printMaze();
 
   return std::make_pair(row, col);
 }
 
 template <>
 std::optional<square>
-Board::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t & /*count*/) {
+Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t & /*count*/) {
   // TODO(enrique): Implement serpentine
   throw std::runtime_error("Not implemented");
 }
 
 template <class T1, class T2>
-size_t Board::HashPair::operator()(const std::pair<T1, T2> &pair) const {
+size_t Maze::HashPair::operator()(const std::pair<T1, T2> &pair) const {
   // https://www.geeksforgeeks.org/how-to-create-an-unordered_map-of-pairs-in-c/
   auto hash1 = std::hash<T1>{}(pair.first);
   auto hash2 = std::hash<T2>{}(pair.second);
@@ -160,12 +159,12 @@ size_t Board::HashPair::operator()(const std::pair<T1, T2> &pair) const {
   return hash1;
 }
 
-std::unordered_map<square, direction_t, Board::HashPair>
-Board::randomWalk(const square &start) {
+std::unordered_map<square, direction_t, Maze::HashPair>
+Maze::randomWalk(const square &start) {
   // ERROR HERE??
 
   direction_t direction = randomDirection(start);
-  std::unordered_map<square, direction_t, Board::HashPair> walk;
+  std::unordered_map<square, direction_t, Maze::HashPair> walk;
   walk[start] = direction;
 
   auto current = move(start, direction);
@@ -178,7 +177,7 @@ Board::randomWalk(const square &start) {
   return walk;
 }
 
-direction_t Board::randomDirection(const square &current) {
+direction_t Maze::randomDirection(const square &current) {
   // CHECKED
 
   auto [row, col] = current;
@@ -201,11 +200,11 @@ direction_t Board::randomDirection(const square &current) {
   return directions[Utils::RandomNum<size_t>(0, directions.size() - 1)];
 }
 
-square Board::move(const square &current, const direction_t &direction) {
+square Maze::move(const square &current, const direction_t &direction) {
   return {current.first + direction.first, current.second + direction.second};
 }
 
-uint8_t Board::solveRandomWalk(
+uint8_t Maze::solveRandomWalk(
     const std::unordered_map<square, direction_t, HashPair> &walk,
     const square &start) {
 
@@ -218,7 +217,7 @@ uint8_t Board::solveRandomWalk(
   //           << static_cast<int>(m_maze[current.first][current.second])
   //           << std::endl
   //           << std::endl;
-  // printBoard();
+  // printMaze();
 
   // std::cout << m_maze[current.first][current.second];
   while (m_maze[current.first][current.second] != SQUARE_TYPE::EMPTY) {
@@ -233,11 +232,11 @@ uint8_t Board::solveRandomWalk(
   return count;
 }
 
-board_t Board::getBoard() const { return m_maze; }
-square Board::getStart() const { return m_start; }
-square Board::getEnd() const { return m_goal; }
+maze_t Maze::getMaze() const { return m_maze; }
+square Maze::getStart() const { return m_start; }
+square Maze::getEnd() const { return m_goal; }
 
-std::vector<square> Board::getNeighbors(const square &current) const {
+std::vector<square> Maze::getNeighbors(const square &current) const {
 
   auto [row, col] = current;
 
@@ -259,7 +258,7 @@ std::vector<square> Board::getNeighbors(const square &current) const {
   return neighbors;
 }
 
-void Board::paintPath(const std::vector<square> &path) {
+void Maze::paintPath(const std::vector<square> &path) {
   for (const auto &sqr : path) {
     if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
         m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {
@@ -267,8 +266,8 @@ void Board::paintPath(const std::vector<square> &path) {
     }
   }
 }
-void Board::paintPath(const std::vector<square> &solution,
-                      const std::vector<square> &searchedPath) {
+void Maze::paintPath(const std::vector<square> &solution,
+                     const std::vector<square> &searchedPath) {
   for (const auto &sqr : solution) {
     if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
         m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {

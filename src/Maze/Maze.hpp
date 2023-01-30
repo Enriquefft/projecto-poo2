@@ -1,5 +1,5 @@
-#ifndef BOARD_HPP
-#define BOARD_HPP
+#ifndef MAZE_HPP
+#define MAZE_HPP
 
 // #include "../Utils/Utils.h"
 #include <cstdint>
@@ -15,7 +15,7 @@ constexpr HUNT_METHOD DEFAULT_HUNT_METHOD = HUNT_METHOD::RANDOM;
 enum class SQUARE_TYPE { EMPTY, WALL, START, END, PATH, SEARCHED };
 std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type);
 
-using board_t = std::vector<std::vector<SQUARE_TYPE>>;
+using maze_t = std::vector<std::vector<SQUARE_TYPE>>;
 
 using square = std::pair<uint8_t, uint8_t>;
 
@@ -27,12 +27,12 @@ constexpr direction_t EAST = {0, -2};
 constexpr direction_t WEST = {0, 2};
 } // namespace DIRECTION
 
-class Board {
+class Maze {
 public:
-  Board();
-  Board(uint8_t height, uint8_t width);
-  void printBoard();
-  [[nodiscard]] board_t getBoard() const;
+  Maze();
+  Maze(uint8_t height, uint8_t width);
+  void printMaze();
+  [[nodiscard]] maze_t getMaze() const;
 
   [[nodiscard]] square getStart() const;
   [[nodiscard]] square getEnd() const;
@@ -44,14 +44,14 @@ public:
                  const std::vector<square> &searchedPath);
 
 private:
-  board_t m_maze;
+  maze_t m_maze;
   uint8_t base_height;
   uint8_t base_width;
 
   square m_start;
   square m_goal;
 
-  void generateBoard(uint8_t height, uint8_t width);
+  void generateMaze(uint8_t height, uint8_t width);
 
   template <HUNT_METHOD = DEFAULT_HUNT_METHOD>
   std::optional<square> hunt(const uint8_t &count);
@@ -70,4 +70,4 @@ private:
                   const square &start);
 };
 
-#endif // !BOARD_HPP
+#endif // !MAZE_HPP

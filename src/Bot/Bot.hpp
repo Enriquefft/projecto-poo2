@@ -1,7 +1,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include "../Board/Board.hpp"
+#include "../Maze/Maze.hpp"
 
 enum class ALGORITHM { DFS, BFS, GBGS, A_STAR };
 
@@ -23,21 +23,12 @@ public:
 
   template <ALGORITHM T>
     requires IsDFSOrBFS<T> bool
-  solve(const Board &board);
+  solve(const Maze &maze);
 
   template <ALGORITHM T>
     requires IsGBFSOrA_STAR<T> bool
-  solve(const Board &board);
+  solve(const Maze &maze);
 
-  // template <ALGORITHM alg>
-  // bool solve(const Board &board) = delete;
-
-  // gcc is not able to compile this
-
-  // template <> bool
-  // solve<ALGORITHM::GBGS>(const Board &board);
-  // template <> bool
-  // solve<ALGORITHM::A_STAR>(const Board &board);
 
   [[nodiscard]] std::vector<square> getSolution() const;
   [[nodiscard]] std::vector<square> getSearchedPath() const;
@@ -48,8 +39,8 @@ private:
 };
 
 // explicit instantiate solve
-extern template bool Bot::solve<ALGORITHM::DFS>(const Board &board);
-extern template bool Bot::solve<ALGORITHM::BFS>(const Board &board);
-extern template bool Bot::solve<ALGORITHM::GBGS>(const Board &board);
-extern template bool Bot::solve<ALGORITHM::A_STAR>(const Board &board);
+extern template bool Bot::solve<ALGORITHM::DFS>(const Maze &maze);
+extern template bool Bot::solve<ALGORITHM::BFS>(const Maze &maze);
+extern template bool Bot::solve<ALGORITHM::GBGS>(const Maze &maze);
+extern template bool Bot::solve<ALGORITHM::A_STAR>(const Maze &maze);
 #endif // !BOT_H

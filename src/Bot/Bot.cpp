@@ -9,7 +9,7 @@
 
 template <ALGORITHM T>
   requires IsDFSOrBFS<T> bool
-Bot::solve(const Board &board) {
+Bot::solve(const Maze &maze) {
 
   struct Node {
     square m_square;
@@ -23,7 +23,7 @@ Bot::solve(const Board &board) {
                      std::stack<square>>
       frontier;
 
-  square start = board.getStart();
+  square start = maze.getStart();
 
   std::vector<Node> parents;
   parents.push_back({start, start});
@@ -44,13 +44,13 @@ Bot::solve(const Board &board) {
 
     frontier.pop();
 
-    if (current == board.getEnd()) {
+    if (current == maze.getEnd()) {
       std::cout << "Found the end!" << std::endl;
       found = true;
       break;
     }
 
-    for (square neighbor : board.getNeighbors(current)) {
+    for (square neighbor : maze.getNeighbors(current)) {
 
       if (std::find(m_searchedPath.begin(), m_searchedPath.end(), neighbor) ==
           m_searchedPath.end()) {
@@ -66,8 +66,8 @@ Bot::solve(const Board &board) {
     m_solution.clear();
   }
 
-  square current = board.getEnd();
-  while (current != board.getStart()) {
+  square current = maze.getEnd();
+  while (current != maze.getStart()) {
     m_solution.push_back(current);
     auto itt =
         std::find_if(parents.begin(), parents.end(), [&](const Node &node) {
@@ -81,16 +81,16 @@ Bot::solve(const Board &board) {
 
 template <ALGORITHM T>
   requires IsGBFSOrA_STAR<T> bool
-Bot::solve(const Board & /*board*/) {
+Bot::solve(const Maze & /*maze*/) {
   std::cout << "GBGS or astar" << std::endl;
   return false;
 }
 
-// template <> bool Bot::solve<ALGORITHM::GBGS>(const Board & /*board*/) {
+// template <> bool Bot::solve<ALGORITHM::GBGS>(const Maze & /*maze*/) {
 //   std::cout << "GBGS" << std::endl;
 //   return false;
 // }
-// template <> bool Bot::solve<ALGORITHM::A_STAR>(const Board & /*board*/) {
+// template <> bool Bot::solve<ALGORITHM::A_STAR>(const Maze & /*maze*/) {
 //   std::cout << "A_STAR" << std::endl;
 //   return false;
 // }
@@ -99,7 +99,7 @@ std::vector<square> Bot::getSolution() const { return m_solution; }
 std::vector<square> Bot::getSearchedPath() const { return m_searchedPath; }
 
 // explicit instantiate solve
-template bool Bot::solve<ALGORITHM::DFS>(const Board &board);
-template bool Bot::solve<ALGORITHM::BFS>(const Board &board);
-template bool Bot::solve<ALGORITHM::GBGS>(const Board &board);
-template bool Bot::solve<ALGORITHM::A_STAR>(const Board &board);
+template bool Bot::solve<ALGORITHM::DFS>(const Maze &maze);
+template bool Bot::solve<ALGORITHM::BFS>(const Maze &maze);
+template bool Bot::solve<ALGORITHM::GBGS>(const Maze &maze);
+template bool Bot::solve<ALGORITHM::A_STAR>(const Maze &maze);

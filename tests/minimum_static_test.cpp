@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <raylib-cpp.hpp>
 #include <raylib.h>
 
@@ -8,22 +9,22 @@ constexpr std::string_view DEFAULT_TEXTURE_PATH =
 
 class Button { // NOLINT
 public:
-  Button() : m_texture(defaultTexture()) {}
+  Button() {
+
+    if (!shared_texture) {
+      shared_texture =
+          std::make_unique<rl::Texture>(DEFAULT_TEXTURE_PATH.data());
+    }
+  }
 
   void Draw(const int &posX, const int &posY) const {
-    m_texture.Draw(posX, posY);
+    shared_texture->Draw(posX, posY);
   }
-  // ~Button() { UnloadTexture(m_texture); }
 
 private:
-  rl::Texture &m_texture;
+  inline static std::unique_ptr<rl::Texture> shared_texture = nullptr;
 
-  static rl::Texture &defaultTexture() {
-    // [[clang::no_destroy]] static rl::Texture default_texture(
-    //     DEFAULT_TEXTURE_PATH.data());
-    static rl::Texture default_texture(DEFAULT_TEXTURE_PATH.data());
-    return default_texture;
-  }
+  [[nodiscard]] static const rl::Texture &texture() { return *shared_texture; }
 };
 
 int main() {
