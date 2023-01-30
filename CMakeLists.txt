@@ -8,7 +8,7 @@ execute_process(
 message(STATUS "Current distro: ${LSB_RELEASE_ID_SHORT}")
 
 cmake_minimum_required(VERSION 3.22)
-project(raylib_cpp_example VERSION 0.1)
+project(Maze VERSION 0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -16,7 +16,7 @@ if(${CMAKE_VERSION} VERSION_LESS "3.25.2")
     message(
         STATUS
         "CMake version is less than 3.25.2,
-                                                                                                                                                                      upgrade to silence unnecesary warnings"
+                                                                                                                                                                          upgrade to silence unnecesary warnings"
     )
 endif()
 

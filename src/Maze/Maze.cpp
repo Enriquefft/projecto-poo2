@@ -38,13 +38,10 @@ template <>
 std::optional<square> Maze::hunt<HUNT_METHOD::SERPENTINE>(const uint8_t &count);
 
 void Maze::generateMaze(uint8_t height, uint8_t width) {
-  // Allocate memory for the board
-  m_maze.resize(height);
-  for (auto &row : m_maze) {
-    for (auto i = 0; i < width; i++) {
-      row.emplace_back(SQUARE_TYPE::WALL);
-    }
-  }
+
+  // generate matrix of walls
+  m_maze = std::vector<std::vector<SQUARE_TYPE>>(
+      height, std::vector<SQUARE_TYPE>(width, SQUARE_TYPE::WALL));
 
   uint8_t start_x = 0;
   uint8_t start_y = 0;
@@ -62,22 +59,13 @@ void Maze::generateMaze(uint8_t height, uint8_t width) {
 
   auto first_hunt_opt = hunt(visit_count);
 
-  // while (first_hunt_opt.has_value()) {
-  //   auto [row, col] = first_hunt_opt.value();
-  //   auto walk = randomWalk({row, col});
-
-  //   visit_count = solveRandomWalk(walk, {row, col});
-  //   first_hunt_opt = hunt(visit_count);
-  //   // printMaze();
-  // }
-
-  // Not a good solution but works ig
-  for (auto i = 0; i < pow(base_width, 3); i++) {
+  while (first_hunt_opt.has_value()) {
     auto [row, col] = first_hunt_opt.value();
     auto walk = randomWalk({row, col});
 
-    visit_count = solveRandomWalk(walk, {row, col});
+    visit_count += solveRandomWalk(walk, {row, col});
     first_hunt_opt = hunt(visit_count);
+    // printMaze();
   }
 
   do {
@@ -114,7 +102,6 @@ std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
   // CHECKED
 
   if (count >= base_height * base_width) {
-    // std::cout << "All squares visited" << std::endl;
     return std::nullopt;
   }
 
@@ -129,11 +116,6 @@ std::optional<square> Maze::hunt<HUNT_METHOD::RANDOM>(const uint8_t &count) {
     col = Utils::RandomNum<uint8_t>(1,
                                     static_cast<uint8_t>(m_maze[0].size() - 1));
   } while (col % 2 != 1);
-
-  // std::cout << "Hunting at: " << static_cast<int>(row) << ", "
-  //           << static_cast<int>(col) << std::endl;
-
-  // printMaze();
 
   return std::make_pair(row, col);
 }
@@ -211,15 +193,7 @@ uint8_t Maze::solveRandomWalk(
   uint8_t count = 0;
 
   square current = start;
-  // std::cout << "Start: (" << static_cast<int>(current.first) << ", "
-  //           << static_cast<int>(current.second) << ")" << std::endl;
-  // std::cout << "value: "
-  //           << static_cast<int>(m_maze[current.first][current.second])
-  //           << std::endl
-  //           << std::endl;
-  // printMaze();
 
-  // std::cout << m_maze[current.first][current.second];
   while (m_maze[current.first][current.second] != SQUARE_TYPE::EMPTY) {
     m_maze[current.first][current.second] = SQUARE_TYPE::EMPTY;
     square next = move(current, walk.at(current));

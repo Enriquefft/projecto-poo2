@@ -54,6 +54,7 @@ def _hunt(grid, count):
 
 
 def _hunt_random(grid, count):
+    print(h * w)
     if count >= (h * w):
         return (-1, -1)
 
@@ -90,15 +91,6 @@ def _generate_random_walk(grid, start):
     walk[start] = direction
     current = _move(start, direction)
 
-    for row in grid:
-        for elem in row:
-            if elem == 1:
-                print("██", end="")
-            elif elem == 0:
-                print("  ", end="")
-        print()
-    # error
-    raise Exception("error")
     while grid[current[0]][current[1]] == 1:
         direction = _random_dir(current)
         walk[current] = direction
@@ -177,10 +169,14 @@ def _solve_random_walk(grid, walk, start):
 
 x = generate()
 
-# for row in x:
-#     for elem in row:
-#         if elem == 1:
-#             print("██", end="")
-#         elif elem == 0:
-#             print("  ", end="")
-#     print()
+
+for row in x:
+    for col in row:
+        if col == 0:
+            print("  ", end="")
+        else:
+            print("██", end="")
+    print()
+
+# for i in range(20):
+#     print(_hunt_random(x, 1))

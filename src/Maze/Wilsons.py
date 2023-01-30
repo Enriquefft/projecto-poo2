@@ -189,7 +189,8 @@ class Wilsons:
         current = start
 
         while grid[current[0]][current[1]] != 0:
-            grid[current] = 0
+            grid[current[0], current[1]] = 0
+            print(grid[current])
             next1 = self._move(current, walk[current])
 
             new_x = (next1[0] + current[0]) // 2
