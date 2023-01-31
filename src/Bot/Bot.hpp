@@ -23,18 +23,26 @@ public:
   Bot() = default;
 
   template <ALGORITHM T>
-    requires IsDFSOrBFS<T> bool
-  solve(const Maze &maze);
+  bool solve(const Maze &maze);
 
   template <ALGORITHM T>
-    requires IsGBFSOrA_STAR<T> bool
+    requires IsDFSOrBFS<T> bool
   solve(const Maze &maze);
-
 
   [[nodiscard]] std::unordered_set<square, Maze::HashPair> getSolution() const;
   [[nodiscard]] std::unordered_set<square, Maze::HashPair> getSearchedPath() const;
 
 private:
+
+  struct Node: public square{
+    Node() = default;
+    Node(const square &pos, const int &score = 0); //NOLINT
+    bool operator==(const square &sqr);
+
+    int w_score{};
+
+  };
+
   std::unordered_set<square, Maze::HashPair> m_solution;
   std::unordered_set<square, Maze::HashPair> m_searchedPath;
 
@@ -49,8 +57,8 @@ private:
 };
 
 // explicit instantiate solve
-extern template bool Bot::solve<ALGORITHM::DFS>(const Maze &maze);
-extern template bool Bot::solve<ALGORITHM::BFS>(const Maze &maze);
-extern template bool Bot::solve<ALGORITHM::GBGS>(const Maze &maze);
-extern template bool Bot::solve<ALGORITHM::A_STAR>(const Maze &maze);
+// extern template bool Bot::solve<ALGORITHM::DFS>(const Maze &maze);
+// extern template bool Bot::solve<ALGORITHM::BFS>(const Maze &maze);
+// extern template bool Bot::solve<ALGORITHM::GBGS>(const Maze &maze);
+// extern template bool Bot::solve<ALGORITHM::A_STAR>(const Maze &maze);
 #endif // !BOT_H

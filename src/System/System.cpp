@@ -33,7 +33,7 @@ void System::run() {
   // bot.solve<ALGORITHM::BFS>(tab);
   // bot.solve<ALGORITHM::DFS>(tab);
   // bot.solve<ALGORITHM::A_STAR>(tab);
-  bot.solve<ALGORITHM::GBGS>(tab);
+  bot.solve<ALGORITHM::A_STAR>(tab);
   tab.paintPath(bot.getSolution(), bot.getSearchedPath());
   tab.printMaze();
   // for (const auto &sq : bot.getSearchedPath()) {
