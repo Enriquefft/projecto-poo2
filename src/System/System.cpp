@@ -23,12 +23,12 @@ void System::run() {
                                                  {W, E, E, E, E, W, E, W},
                                                  {W, W, E, W, W, W, W, W},
                                                  {W, E, E, E, E, E, E, W},
-                                                 {W, W, W, W, W, W, G, W},
+                                                 {W, W, E, W, W, W, G, W},
                                                  {W, W, W, W, W, W, W, W}
 
   };
 
-  Maze tab(board);
+  Maze tab;
   Bot bot;
   // bot.solve<ALGORITHM::BFS>(tab);
   // bot.solve<ALGORITHM::DFS>(tab);

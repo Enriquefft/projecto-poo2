@@ -73,7 +73,7 @@ Bot::solve(const Maze &maze) {
 // Manhattan distance heuristic function
 int Bot::heuristic(const square &current, const square &goal) {
   return std::abs(current.first - goal.first) +
-         std::abs(current.second + goal.second);
+         std::abs(current.second - goal.second);
 }
 
 // template <ALGORITHM T> class Bot::Compare {};
@@ -85,7 +85,7 @@ public:
     if (!s_goal.has_value()) {
       throw std::runtime_error("Goal not set");
     }
-    return heuristic(sq1, Bot::s_goal.value()) <
+    return heuristic(sq1, Bot::s_goal.value()) >
            heuristic(sq2, Bot::s_goal.value());
   }
 };
@@ -130,18 +130,12 @@ Bot::solve(const Maze &maze) {
 
   auto counter = 0;
 
-  std::cout << "goal: " << (int)s_goal.value().first << "  "
-            << (int)s_goal.value().second << std::endl;
-
   while (!frontier.empty()) {
 
     counter++;
 
     current = frontier.top();
     frontier.pop();
-
-    std::cout << "searching in" << (int)current.first << "  "
-              << (int)current.second << std::endl;
 
     if (current == maze.getGoal()) {
       std::cout << "Found the end!" << std::endl;
@@ -159,10 +153,9 @@ Bot::solve(const Maze &maze) {
         parent[neighbor] = current;
       }
     }
-    printPriorityQueue(frontier);
-    if (counter >= 5) {
-      break;
-    }
+    // if (counter >= 7) {
+    //   break;
+    // }
   }
   if (!found) {
     std::cout << "No solution found" << std::endl;
