@@ -23,6 +23,8 @@ public:
 
 private:
   inline static std::unique_ptr<rl::Texture> shared_texture = nullptr;
+  // [[clang::no_destroy]] inline static std::unique_ptr<rl::Texture>
+  //     shared_texture = nullptr;
 
   [[nodiscard]] static const rl::Texture &texture() { return *shared_texture; }
 };

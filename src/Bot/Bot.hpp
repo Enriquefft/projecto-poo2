@@ -2,6 +2,7 @@
 #define BOT_H
 
 #include "../Maze/Maze.hpp"
+#include <unordered_set>
 
 enum class ALGORITHM { DFS, BFS, GBGS, A_STAR };
 
@@ -30,12 +31,21 @@ public:
   solve(const Maze &maze);
 
 
-  [[nodiscard]] std::vector<square> getSolution() const;
-  [[nodiscard]] std::vector<square> getSearchedPath() const;
+  [[nodiscard]] std::unordered_set<square, Maze::HashPair> getSolution() const;
+  [[nodiscard]] std::unordered_set<square, Maze::HashPair> getSearchedPath() const;
 
 private:
-  std::vector<square> m_solution;
-  std::vector<square> m_searchedPath;
+  std::unordered_set<square, Maze::HashPair> m_solution;
+  std::unordered_set<square, Maze::HashPair> m_searchedPath;
+
+  inline static std::optional<square> s_goal = std::nullopt;
+
+  template <ALGORITHM T>
+  class Compare;
+
+  [[nodiscard]] static int heuristic(const square &current, const square &goal);
+
+
 };
 
 // explicit instantiate solve

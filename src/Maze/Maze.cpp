@@ -14,6 +14,22 @@ constexpr uint8_t MIN_WIDTH = 10;
 constexpr uint8_t MAX_HEIGHT = 15;
 constexpr uint8_t MIN_HEIGHT = 7;
 
+Maze::Maze(maze_t &maze)
+    : m_maze(std::move(maze)), base_height(0), base_width(0) {
+  // find SQUARE_TYPE::GOAL position in maze using std::find_if
+
+  for (size_t i = 0; i < m_maze.size(); i++) {
+    for (size_t j = 0; j < m_maze[i].size(); j++) {
+      if (m_maze[i][j] == SQUARE_TYPE::GOAL) {
+        m_goal = {i, j};
+      }
+      if (m_maze[i][j] == SQUARE_TYPE::START) {
+        m_start = {i, j};
+      }
+    }
+  }
+}
+
 Maze::Maze(uint8_t customHeight, uint8_t customWidth, HUNT_METHOD huntMethod)
     : base_height(customHeight), base_width(customWidth) {
   uint8_t height = base_height * 2 + 1;
@@ -99,7 +115,7 @@ void Maze::generateMaze(uint8_t height, uint8_t width, HUNT_METHOD huntMethod) {
     end_x = Utils::RandomNum<uint8_t>(1, height - 1);
     end_y = Utils::RandomNum<uint8_t>(1, width - 1);
   } while (m_maze[end_x][end_y] != SQUARE_TYPE::EMPTY);
-  m_maze[end_x][end_y] = SQUARE_TYPE::END;
+  m_maze[end_x][end_y] = SQUARE_TYPE::GOAL;
   m_goal = {end_x, end_y};
 }
 
@@ -255,8 +271,10 @@ uint8_t Maze::solveRandomWalk(
 }
 
 maze_t Maze::getMaze() const { return m_maze; }
-square Maze::getStart() const { return m_start; }
-square Maze::getEnd() const { return m_goal; }
+
+bool Maze::isValidSquare(const SQUARE_TYPE &current) const {
+  return current == SQUARE_TYPE::EMPTY || current == SQUARE_TYPE::GOAL;
+}
 
 std::vector<square> Maze::getNeighbors(const square &current) const {
 
@@ -264,43 +282,42 @@ std::vector<square> Maze::getNeighbors(const square &current) const {
 
   std::vector<square> neighbors;
 
-  if (row > 0 && m_maze[row - 1][col] != SQUARE_TYPE::WALL) {
+  if (row > 0 && isValidSquare(m_maze[row - 1][col])) {
     neighbors.emplace_back(row - 1, col);
   }
-  if (row < m_maze.size() - 1 && m_maze[row + 1][col] != SQUARE_TYPE::WALL) {
+  if (row < m_maze.size() - 1 && isValidSquare(m_maze[row + 1][col])) {
     neighbors.emplace_back(row + 1, col);
   }
-  if (col > 0 && m_maze[row][col - 1] != SQUARE_TYPE::WALL) {
+  if (col > 0 && isValidSquare(m_maze[row][col - 1])) {
     neighbors.emplace_back(row, col - 1);
   }
-  if (col < m_maze[0].size() - 1 && m_maze[row][col + 1] != SQUARE_TYPE::WALL) {
+  if (col < m_maze[0].size() - 1 && isValidSquare(m_maze[row][col + 1])) {
     neighbors.emplace_back(row, col + 1);
   }
 
   return neighbors;
 }
 
-void Maze::paintPath(const std::vector<square> &path) {
+void Maze::paintPath(const std::unordered_set<square, HashPair> &path) {
   for (const auto &sqr : path) {
     if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
-        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::GOAL) {
       m_maze[sqr.first][sqr.second] = SQUARE_TYPE::PATH;
     }
   }
 }
-void Maze::paintPath(const std::vector<square> &solution,
-                     const std::vector<square> &searchedPath) {
-  for (const auto &sqr : solution) {
-    if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
-        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END) {
-      m_maze[sqr.first][sqr.second] = SQUARE_TYPE::PATH;
-    }
-  }
+void Maze::paintPath(const std::unordered_set<square, HashPair> &solution,
+                     const std::unordered_set<square, HashPair> &searchedPath) {
   for (const auto &sqr : searchedPath) {
     if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
-        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::END &&
-        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::PATH) {
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::GOAL) {
       m_maze[sqr.first][sqr.second] = SQUARE_TYPE::SEARCHED;
+    }
+  }
+  for (const auto &sqr : solution) {
+    if (m_maze[sqr.first][sqr.second] != SQUARE_TYPE::START &&
+        m_maze[sqr.first][sqr.second] != SQUARE_TYPE::GOAL) {
+      m_maze[sqr.first][sqr.second] = SQUARE_TYPE::PATH;
     }
   }
 }
@@ -316,7 +333,7 @@ std::ostream &operator<<(std::ostream &ost, const SQUARE_TYPE &type) {
   case SQUARE_TYPE::START:
     ost << "";
     break;
-  case SQUARE_TYPE::END:
+  case SQUARE_TYPE::GOAL:
     ost << " ";
     break;
   case SQUARE_TYPE::PATH:
